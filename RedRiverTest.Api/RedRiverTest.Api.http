@@ -1,0 +1,48 @@
+@host = https://localhost:7134
+
+### 1. Registrera användare
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "userName": "test",
+  "password": "123"
+}
+
+### 2. Logga in
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "userName": "test",
+  "password": "123"
+}
+
+### 3. Hämta böcker (kräver token)
+GET {{host}}/api/books
+Authorization: Bearer {{token}}
+
+### 4. Skapa bok (kräver token)
+POST {{host}}/api/books
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Clean Code",
+  "author": "Robert C. Martin",
+  "publishedDate": "2008-08-01T00:00:00"
+}
+
+### 5. Hämta mina citat (kräver token)
+GET {{host}}/api/quotes
+Authorization: Bearer {{token}}
+
+### 6. Skapa citat (kräver token)
+POST {{host}}/api/quotes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "text": "Talk is cheap. Show me the code.",
+  "author": "Linus Torvalds"
+}
