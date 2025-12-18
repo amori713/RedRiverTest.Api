@@ -13,4 +13,4 @@ WORKDIR /app
 ENV ASPNETCORE_URLS=http://0.0.0.0:${PORT}
 
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "RedRiverTest.Api.dll"]
+ENTRYPOINT ["dotnet", "RedRiverTest.Api.dll"] 
