@@ -10,31 +10,29 @@ namespace RedRiverTest.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // ---------- SERVICES ----------
-
             builder.Services.AddControllers();
 
-            // CORS – tillåter Angular-klienten
+            // CORS – tillåter Angular (lokalt + Netlify)
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularClient", policy =>
                 {
                     policy.WithOrigins(
                             "http://localhost:4200",
-                            "https://localhost:4200")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                            "https://localhost:4200",
+                            "https://resonant-torrone-2421ce.netlify.app"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                 });
             });
 
-            // JWT-inställningar från appsettings.json
+            // JWT-inställningar
             var jwtSection = builder.Configuration.GetSection("Jwt");
             var key = jwtSection["Key"];
 
             if (string.IsNullOrWhiteSpace(key))
-            {
                 throw new Exception("Jwt:Key saknas i appsettings.json");
-            }
 
             var keyBytes = Encoding.UTF8.GetBytes(key);
 
@@ -63,9 +61,11 @@ namespace RedRiverTest.Api
 
             var app = builder.Build();
 
-            // ---------- MIDDLEWARE ----------
-
-            app.UseHttpsRedirection();
+            // På Render kan UseHttpsRedirection ställa till det -> kör bara lokalt
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseCors("AllowAngularClient");
 
